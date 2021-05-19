@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "stdafx.h"
 #include "ui_mainwindow.h"
 
 using namespace std;
@@ -15,14 +15,8 @@ CascadeClassifier eyes_cascade;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    //Photo_frame.setEnabled(false);
     ui->setupUi(this);
-    this->setWindowTitle(tr("Tool Box"));
-    //image[0]=imread("D://Photos/BB8/BB8.jpg");
-    //image[0]=imread("D://Photos/BB8/15609246_1219648224796806_584233906_o.jpg");
-    //cvtColor(image,image,CV_RGB2BGR);
-    //imshow("new",image[0]);
-    //-- 1. Load the cascade
+    this->setWindowTitle(tr("Tools"));
     if(!face_cascade.load("C:/opencv/sources/data/haarcascades/haarcascade_frontalface_alt.xml") )
         ui->label_2->setText("--(!)Error loading face cascade\n");
 
@@ -41,15 +35,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     myTimer = new QTimer(this);
-    myTimer->start(500);                   //以1000毫秒為週期起動定時器
+    myTimer->start(500);                   //1초 간격 타이머
     connect(myTimer,SIGNAL(timeout()),this,SLOT(un_redo()));
 }
 
 
 MainWindow::~MainWindow()
 {
-
-
     QMessageBox message(QMessageBox::NoIcon, "Save", "Do you want to save photo?", QMessageBox::Yes | QMessageBox::No, NULL);
     if(message.exec() == QMessageBox::Yes)
     {
@@ -146,7 +138,6 @@ void MainWindow::on_actionOpen_File_triggered()
 
 void MainWindow::on_actionUndo_triggered()
 {
-    //image[0]=imread("D://Photos/BB8/15609246_1219648224796806_584233906_o.jpg");
     currentstep--;
     un_redo();
     photo_window_update(image[currentstep],0);
@@ -154,7 +145,6 @@ void MainWindow::on_actionUndo_triggered()
 
 void MainWindow::on_actionRedo_triggered()
 {
-    //image[0]=imread("D://Photos/BB8/BB8.jpg");
     currentstep++;
     un_redo();
     photo_window_update(image[currentstep],0);
@@ -179,11 +169,9 @@ void MainWindow::on_actionSave_File_triggered()
 
 void MainWindow::on_shapen_btn_clicked()
 {
-    Mat kernel = (Mat_<float>(3, 3) << 0, -1, 0, -1, 5, -1, 0, -1, 0);
+    Mat kernel = (Mat_<float>(3, 3) << 0, -1, 0, -1, 5, -1, 0, -1, 0);//라플라시안
     filter2D(image[currentstep], image[currentstep+1], image[currentstep].depth(), kernel);
-    //Laplacian(image[currentstep],image[currentstep+1],image[currentstep].type());
     currentstep++;
-
     photo_window_update(image[currentstep],0);
     un_redo();
 }
@@ -212,19 +200,17 @@ void MainWindow::on_magic_set_btn_clicked()
             currentstep++;
         }
         else{
-            //msg=new QMessageBox(this);
             QMessageBox::about(NULL,"Attention","Convert to gray image first.");
         }
         break;
     case 2:
-
-        //求X方向梯度
+        //x방향 기울기
         Sobel( image[currentstep], grad_x, CV_16S, 1, 0, 3, 1, 1, BORDER_DEFAULT );
         convertScaleAbs( grad_x, abs_grad_x );
-        //求Y方向梯度
+        //y방향 기울기
         Sobel( image[currentstep], grad_y, CV_16S, 0, 1, 3, 1, 1, BORDER_DEFAULT );
         convertScaleAbs( grad_y, abs_grad_y );
-        //合併梯度(近似)
+        //그라디언트 병합
         addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5, 0, image[currentstep+1] );
         currentstep++;
         break;
@@ -234,10 +220,6 @@ void MainWindow::on_magic_set_btn_clicked()
     default:
         break;
     }
-
-
-    //ui->magic_set_btn->setText(QString::number(index));
-
 
     photo_window_update(image[currentstep],0);
     un_redo();
@@ -309,7 +291,7 @@ void MainWindow::detectAndDisplay(Mat frame)
     cvtColor( frame, frame_gray, COLOR_BGR2GRAY );
     equalizeHist( frame_gray, frame_gray );
 
-    //-- Detect faces
+    //얼굴감지
     face_cascade.detectMultiScale( frame_gray, faces, 1.1, 2, 0|CASCADE_SCALE_IMAGE, Size(10, 10) );
 
     for ( size_t i = 0; i < faces.size(); i++ )
@@ -320,9 +302,8 @@ void MainWindow::detectAndDisplay(Mat frame)
         Mat faceROI = frame_gray( faces[i] );
         std::vector<Rect> eyes;
 
-        //-- In each face, detect eyes
+        //각 얼굴마다 눈 차지
         eyes_cascade.detectMultiScale( faceROI, eyes, 1.1, 2, 0 |CASCADE_SCALE_IMAGE, Size(30, 30) );
-
         for ( size_t j = 0; j < eyes.size(); j++ )
         {
             Point eye_center( faces[i].x + eyes[j].x + eyes[j].width/2, faces[i].y + eyes[j].y + eyes[j].height/2 );
@@ -331,9 +312,6 @@ void MainWindow::detectAndDisplay(Mat frame)
         }
     }
     //-- Show what you got
-    //imshow( "window_name", frame );
     image[currentstep+1]=frame.clone();
     currentstep++;
-    /*photo_window_update(image[currentstep],0);
-    un_redo();*/
 }

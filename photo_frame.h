@@ -1,23 +1,8 @@
 #ifndef PHOTO_FRAME_H
 #define PHOTO_FRAME_H
 
+#include "stdafx.h"
 
-#include <QDialog>
-#include <opencv2/opencv.hpp>  //all in one
-#include <iostream>
-#include <QString>
-#include <QFileDialog>
-#include <QPixmap>
-#include <Qvector>
-#include <QRgb>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QMouseEvent>
-#include <QMessageBox>
-
-using namespace cv;
-using namespace std;
 extern Mat image[];
 extern int currentstep;
 namespace Ui {
@@ -56,7 +41,6 @@ private:
     Ui::photo_frame *ui;
 
     QPixmap Pixmap;
-    //QLabel *Photo_label= new QLabel("");
 
 };
 

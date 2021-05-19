@@ -1,24 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include "photo_frame.h"
-#include <opencv2/opencv.hpp>  //all in one
-#include <iostream>
-#include <QString>
-#include <QFileDialog>
-#include <QPixmap>
-#include <Qvector>
-#include <QRgb>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QMessageBox>
-#include <QTimer>
+#include "stdafx.h"
 
-
-using namespace cv;
-using namespace std;
 
 
 namespace Ui {

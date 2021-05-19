@@ -1,4 +1,4 @@
-#include "photo_frame.h"
+#include "stdafx.h"
 #include "ui_photo_frame.h"
 
 using namespace cv;
@@ -20,22 +20,7 @@ photo_frame::photo_frame(QWidget *parent) :
 
     ui->label->setMouseTracking(true);
 
-    //QVBoxLayout *lay = new QVBoxLayout(this);
     this->setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint|Qt::WindowMaximizeButtonHint);
-    //lay->addWidget(ui->label);
-    //lay->alignment()
-    //ui->scrollAreaWidgetContents->setLayout(lay);
-
-    /* static QString size;
-
-
-    Pixmap=QPixmap::fromImage(Mat2QImage(image[currentstep]));
-    size=QString::number(Pixmap.width())+"x"+QString::number(Pixmap.height());
-
-int window_height=900;
-    int window_width=Pixmap.width()*800/Pixmap.height();             //which is the width after scaled
-    ui->label->setPixmap(Pixmap);
-    this->resize(window_width+50,window_height+50);*/
 
 }
 void photo_frame::frame_load(Mat frame){
@@ -50,11 +35,8 @@ void photo_frame::frame_load(Mat frame){
         int window_height=900;
         int window_width=pixmap_width*window_height/pixmap_height;             //which is the width after scaled
         this->setGeometry(100,100,window_width,window_height);
-
-        //this->resize(window_width+50,window_height+100);
         on_fit_btn_clicked();
 
-        //imshow("new",image[currentstep]);
     }
 }
 void photo_frame::frame_update(Mat frame){
@@ -75,7 +57,6 @@ void photo_frame::frame_update(Mat frame){
 }
 
 QImage photo_frame::Mat2QImage(const Mat src){
-    //return QImage((unsigned char*) src.data, src.cols, src.rows, QImage::Format_RGB888).rgbSwapped();
     if(src.type()==CV_8UC1){
         QVector<QRgb> colorTable;
         for(int i=0; i<256; i++)
@@ -108,7 +89,6 @@ void photo_frame::on_zoomin_btn_clicked()
     if(zoom_times<2){
         zoom_times= zoom_times+0.05;}
     int pixmap_height_t=int(pixmap_height*zoom_times);
-    //ui->fit_btn->setText(QString::number(pixmap_height_t));
     QPixmap ZPixmap=Pixmap.scaledToHeight(pixmap_height_t);
     ui->label->setPixmap(ZPixmap);
 }
@@ -150,8 +130,6 @@ void photo_frame::on_ori_btn_clicked()
 
 
 void photo_frame::mouseMoveEvent(QMouseEvent *event){
-
-    //static int oldx=0,oldy=0;
     int x=event->x();
     int y=event->y();
 
@@ -174,8 +152,6 @@ void photo_frame::mouseMoveEvent(QMouseEvent *event){
     drawrec=image[currentstep].clone();   //  if we use "=", the right Mat will change whith the left Mat
     rectangle(drawrec, Point(begin_pointX,begin_pointY), Point(realx,realy), Scalar(0,0,255), 5);
     frame_update(drawrec);
-    //ui->test->setText(QString(tr("(%1, %2)")).arg(QString::number(P_x), QString::number(P_y)));//arg()函數可以替換掉QString中出現的佔位符。佔位符為%加位置，如%1、%2。
-
 
 
 }
@@ -223,7 +199,6 @@ void photo_frame::mouseReleaseEvent(QMouseEvent *event){
     QMessageBox message(QMessageBox::NoIcon, "Cut", "Do you want to cut down this area?", QMessageBox::Yes | QMessageBox::No, NULL);
     if(message.exec() == QMessageBox::Yes)
     {
-        //Rect roi(10, 20, 100, 50);
         image[currentstep+1] = image[currentstep](Range(begin_pointY,end_pointY), Range(begin_pointX,end_pointX)).clone();
         currentstep++;
         frame_load(image[currentstep]);
