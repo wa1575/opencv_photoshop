@@ -1,14 +1,12 @@
 #ifndef STDAFX_H
 #define STDAFX_H
 
-
 #include <QDialog>
-#include <opencv2/opencv.hpp>  //all in one
+#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <QString>
 #include <QFileDialog>
 #include <QPixmap>
-#include <Qvector>
 #include <QRgb>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -17,7 +15,6 @@
 #include <QMessageBox>
 #include <QMainWindow>
 #include <QTimer>
-
 
 using namespace cv;
 using namespace std;

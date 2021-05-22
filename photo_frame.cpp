@@ -1,8 +1,5 @@
-#include "stdafx.h"
+#include "photo_frame.h" //qt가 웃긴게 이게 없으면 슬롯이 추가 안됨
 #include "ui_photo_frame.h"
-
-using namespace cv;
-using namespace std;
 
 float zoom_times=1;
 float zoom_scale=0;
@@ -133,7 +130,6 @@ void photo_frame::mouseMoveEvent(QMouseEvent *event){
     int x=event->x();
     int y=event->y();
 
-
     int P_x=(ui->scrollArea->width()-pixmap_width*zoom_times)/2+1;
     int P_y=(ui->scrollArea->height()-pixmap_height*zoom_times)/2+1;
 
@@ -149,8 +145,8 @@ void photo_frame::mouseMoveEvent(QMouseEvent *event){
         realy=0;
 
     Mat drawrec;
-    drawrec=image[currentstep].clone();   //  if we use "=", the right Mat will change whith the left Mat
-    rectangle(drawrec, Point(begin_pointX,begin_pointY), Point(realx,realy), Scalar(0,0,255), 5);
+    drawrec=image[currentstep].clone();
+    rectangle(drawrec, Point(begin_pointX,begin_pointY), Point(realx,realy), Scalar(0,255,0), 3);
     frame_update(drawrec);
 
 
@@ -173,8 +169,6 @@ void photo_frame::mousePressEvent(QMouseEvent *event){
         begin_pointY=Pixmap.height();
     else if(begin_pointY<0)
         begin_pointY=0;
-
-
 
 }
 
@@ -205,8 +199,23 @@ void photo_frame::mouseReleaseEvent(QMouseEvent *event){
     }
     else
         frame_update(image[currentstep]);
-
 }
 
 
+//회전함수
+void photo_frame::on_clockwise_btn_clicked()
+{
+    rotate(image[currentstep], image[currentstep+1], ROTATE_90_CLOCKWISE);
+    currentstep++;
+    frame_load(image[currentstep]);
+}
+
+
+void photo_frame::on_c_clockwise_btn_clicked()
+{
+    rotate(image[currentstep], image[currentstep+1], ROTATE_90_COUNTERCLOCKWISE);
+    currentstep++;
+    frame_load(image[currentstep]);
+
+}
 

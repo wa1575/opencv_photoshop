@@ -28,7 +28,6 @@ public slots:
 
 
 private slots:
-
     void on_zoomin_btn_clicked();
 
     void on_zoomout_btn_clicked();
@@ -36,6 +35,10 @@ private slots:
     void on_fit_btn_clicked();
 
     void on_ori_btn_clicked();
+
+    void on_clockwise_btn_clicked();
+
+    void on_c_clockwise_btn_clicked();
 
 private:
     Ui::photo_frame *ui;
