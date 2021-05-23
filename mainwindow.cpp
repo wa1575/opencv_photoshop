@@ -23,11 +23,11 @@ MainWindow::MainWindow(QWidget *parent) :
     if(!eyes_cascade.load("C:/opencv/sources/data/haarcascades/haarcascade_eye_tree_eyeglasses.xml") )
         ui->label_2->setText("--(!)Error loading eyes cascade\n");
 
-    ui->brightness_slider->setMinimum(-15);
-    ui->brightness_slider->setMaximum(15);
+    ui->brightness_slider->setMinimum(-20);
+    ui->brightness_slider->setMaximum(20);
 
-    ui->contrast_slider->setMinimum(-15);
-    ui->contrast_slider->setMaximum(15);
+    ui->contrast_slider->setMinimum(-20);
+    ui->contrast_slider->setMaximum(20);
 
     ui->brightness_slider->setValue(0);
     ui->contrast_slider->setValue(0);
@@ -79,6 +79,16 @@ void MainWindow::un_redo(){
         ui->set_bright_btn->setEnabled(false);
         ui->set_con_btn->setEnabled(false);
         ui->sharpen_btn->setEnabled(false);
+        ui->edge_btn->setEnabled(false);
+        ui->gray_btn->setEnabled(false);
+        ui->close_btn->setEnabled(false);
+        ui->open_btn->setEnabled(false);
+        ui->dilat_btn->setEnabled(false);
+        ui->eros_btn->setEnabled(false);
+        ui->draw_btn->setEnabled(false);
+        ui->stret_btn->setEnabled(false);
+        ui->equal_btn->setEnabled(false);
+        ui->normal_btn->setEnabled(false);
     }
     else{
         ui->blur_btn->setEnabled(true);
@@ -89,6 +99,16 @@ void MainWindow::un_redo(){
         ui->set_bright_btn->setEnabled(true);
         ui->set_con_btn->setEnabled(true);
         ui->sharpen_btn->setEnabled(true);
+        ui->edge_btn->setEnabled(true);
+        ui->gray_btn->setEnabled(true);
+        ui->close_btn->setEnabled(true);
+        ui->open_btn->setEnabled(true);
+        ui->dilat_btn->setEnabled(true);
+        ui->eros_btn->setEnabled(true);
+        ui->draw_btn->setEnabled(true);
+        ui->stret_btn->setEnabled(true);
+        ui->equal_btn->setEnabled(true);
+        ui->normal_btn->setEnabled(true);
     }
     if(currentstep>0)
         ui->actionUndo->setEnabled(true);
@@ -183,7 +203,7 @@ void MainWindow::on_magic_set_btn_clicked()
         break;
     case 1:
         if(image[currentstep].channels()==1){
-            equalizeHist(image[currentstep],image[currentstep+1]);
+            equalizeHist(image[currentstep],image[currentstep+1]); //평활화
             currentstep++;
         }
         else{
@@ -233,7 +253,7 @@ void MainWindow::on_brightness_slider_sliderReleased()
 {
     int value=ui->brightness_slider->value();
     double alpha=1;
-    int beta=value*5; //이정도가 적당함
+    int beta=value*10; //이정도가 적당함
     Mat preview;
     image[currentstep].convertTo(preview, -1, alpha, beta);
 
@@ -247,13 +267,12 @@ void MainWindow::on_set_bright_btn_clicked()
     ui->brightness_slider->setValue(0);
     int value=ui->brightness_slider->value();
     double alpha=1;
-    int beta=value*5;
+    int beta=value*10;
     image[currentstep].convertTo(image[currentstep+1], -1, alpha, beta);
     currentstep++;
 
     photo_window_update(image[currentstep],0);
     ui->brightness_slider->setValue(0);
-
 }
 
 void MainWindow::on_set_con_btn_clicked()
@@ -397,3 +416,167 @@ void MainWindow::overlayImage(const Mat &background, const Mat &foreground,Mat &
             }
         }
     }
+
+void MainWindow::on_gray_btn_clicked()
+{
+    //기본
+    Mat grad_x, grad_y;
+    Mat abs_grad_x, abs_grad_y;
+    //gray 전환
+    if(image[currentstep].channels()!=1){
+        cvtColor(image[currentstep],image[currentstep+1], COLOR_BGR2GRAY,1);
+        currentstep++;
+    }
+    //update하기
+    photo_window_update(image[currentstep],0);
+    un_redo();
+
+}
+
+
+void MainWindow::on_edge_btn_clicked()
+{
+    //기본
+    Mat grad_x, grad_y;
+    Mat abs_grad_x, abs_grad_y;
+    //x방향 기울기
+    Sobel( image[currentstep], grad_x, CV_16S, 1, 0, 3, 1, 1, BORDER_DEFAULT );
+    convertScaleAbs( grad_x, abs_grad_x );
+    //y방향 기울기
+    Sobel( image[currentstep], grad_y, CV_16S, 0, 1, 3, 1, 1, BORDER_DEFAULT );
+    convertScaleAbs( grad_y, abs_grad_y );
+    //그라디언트 병합
+    addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5, 0, image[currentstep+1] );
+    currentstep++;
+
+    //update하기
+    photo_window_update(image[currentstep],0);
+    un_redo();
+
+}
+
+
+void MainWindow::on_eros_btn_clicked()
+{
+
+}
+
+
+void MainWindow::on_dilat_btn_clicked()
+{
+
+}
+
+
+void MainWindow::on_open_btn_clicked()
+{
+
+}
+
+
+void MainWindow::on_close_btn_clicked()
+{
+
+}
+
+
+void MainWindow::on_normal_btn_clicked()
+{
+
+}
+
+
+void MainWindow::on_equal_btn_clicked()
+{
+
+}
+
+
+void MainWindow::on_stret_btn_clicked()
+{
+
+}
+
+
+void MainWindow::on_draw_btn_clicked()
+{
+    //기본
+    Mat hist, hist_img, hue_hist, hue_hist_img;
+    Mat HSV_img, HSV_arr[3];
+
+      //흑백일 시 계산 및 그리기 함수
+    if(image[currentstep].channels()==1){
+        calc_Histo(image[currentstep], hist, 256, 256);
+        draw_histo(hist, hist_img, Size(256,200));
+
+        imshow("his_img", hist_img);
+    }
+     //컬러일 시 계산 및 그리기 함수
+    else{
+        cvtColor(image[currentstep], HSV_img, COLOR_BGR2HSV);
+        split(HSV_img, HSV_arr);
+        calc_Histo(HSV_arr[0], hue_hist, 18, 180);
+        draw_histo(hue_hist, hue_hist_img, Size(360,200));
+
+        imshow("hue_his_img", hue_hist_img);
+    }
+    //update하기
+    photo_window_update(image[currentstep],0);
+    un_redo();
+}
+
+
+
+void MainWindow::calc_Histo(const Mat& image, Mat &hist, int bins, int range_max=256){
+    int histSize[] = { bins };
+    float range[] = {0, (float)range_max };
+    int channels[] = { 0 };
+    const float* ranges[] = { range };
+
+    calcHist(&image, 1, channels, Mat(), hist, 1, histSize, ranges);
+}
+
+void MainWindow::draw_histo(Mat hist, Mat &hist_img, Size size= Size(256,200)){
+    hist_img = Mat(size, CV_8U, Scalar(255));
+    float bin = (float)hist_img.cols / hist.rows;
+    normalize(hist, hist, 0, hist_img.rows, NORM_MINMAX);
+
+    for(int i=0; i<hist.rows; i++){
+        float start_x = i*bin;// 막대 사각형 시작 x 좌표
+        float end_x = (i+1) * bin; // 막대 사각형 종료 x 좌표
+        Point2f pt1(start_x,0);
+        Point2f pt2(end_x, hist.at<float>(i));
+        //막대 사각형 그리기
+        if(pt2.y >0) rectangle(hist_img, pt1, pt2, Scalar(0), -1);
+    }
+    flip(hist_img, hist_img, 0);//뒤집기
+}
+//컬러 그리기
+Mat MainWindow:: make_palatte(int rows){
+    Mat hsv(rows, 1, CV_8UC3);
+    for(int i =0; i< rows;i++){
+        uchar hue = saturate_cast<uchar>((float)i/rows*180);
+        hsv.at<Vec3b>(i) = Vec3b(hue,255,255);
+    }
+    cvtColor(hsv, hsv, COLOR_HSV2BGR);
+    return hsv;
+}
+void MainWindow::draw_histo_hue(Mat hist, Mat &hist_img, Size size = Size(256,200)){
+    Mat hsv_palatte = make_palatte(hist.rows);
+
+    hist_img = Mat(size, CV_8UC3, Scalar(255,255,255));
+    float bin = (float)hist_img.cols / hist.rows;
+    normalize(hist, hist, 0, hist_img.rows, NORM_MINMAX); //정규화
+
+    for(int i=0; i<hist.rows; i++){
+        float start_x = i*bin;// 막대 사각형 시작 x 좌표
+        float end_x = (i+1) * bin; // 막대 사각형 종료 x 좌표
+        Point2f pt1(start_x,0);
+        Point2f pt2(end_x, hist.at<float>(i));
+        //막대 사각형 그리기
+        Scalar color = hsv_palatte.at<Vec3b>(i);
+        if(pt2.y >0) rectangle(hist_img, pt1, pt2, color, -1);
+    }
+    flip(hist_img, hist_img, 0);//뒤집기
+
+}
