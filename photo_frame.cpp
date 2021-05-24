@@ -17,6 +17,7 @@ photo_frame::photo_frame(QWidget *parent) :
 
     ui->label->setMouseTracking(true);
 
+
     this->setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint|Qt::WindowMaximizeButtonHint);
 
 }
@@ -143,37 +144,83 @@ void photo_frame::mouseMoveEvent(QMouseEvent *event){
         realy=Pixmap.height();
     else if(realx<0)
         realy=0;
-
+    if(pers_triger!=1){
     Mat drawrec;
     drawrec=image[currentstep].clone();
     rectangle(drawrec, Point(begin_pointX,begin_pointY), Point(realx,realy), Scalar(0,255,0), 3);
     frame_update(drawrec);
-
-
+    }
 }
 
-void photo_frame::mousePressEvent(QMouseEvent *event){
-    on_fit_btn_clicked();
-    int x=event->x();
-    int y=event->y();
-    int P_x=(ui->scrollArea->width()-pixmap_width*zoom_times)/2+1;
-    int P_y=(ui->scrollArea->height()-pixmap_height*zoom_times)/2+1;
 
-    begin_pointX=(x-P_x)/zoom_times;
-    begin_pointY=(y-P_y-ui->scrollArea->y())/zoom_times;
-    if(begin_pointX>Pixmap.width())
-        begin_pointX=Pixmap.width();
-    else if(begin_pointX<0)
-        begin_pointX=0;
-    if(begin_pointY>Pixmap.height())
-        begin_pointY=Pixmap.height();
-    else if(begin_pointY<0)
-        begin_pointY=0;
+Point2f p[4];
+int nPoint = 0;
+Mat disply_image;
+
+Mat photo_frame::getPerspectiveMatrix() {
+    Mat m;
+    if (nPoint == 4) {
+        int L1 = sqrt(pow(p[0].x - p[1].x, 2) + pow(p[0].y - p[1].y, 2));
+        int L2 = sqrt(pow(p[2].x - p[1].x, 2) + pow(p[2].y - p[1].y, 2));
+        Point2f p_new[4];
+        p_new[1] = p[1];
+        p_new[0].x = p[1].x;
+        p_new[0].y = p[1].y - L1;
+        p_new[2].x = p[1].x + L2;
+        p_new[2].y = p[1].y;
+        p_new[3].x = p[1].x + L2;
+        p_new[3].y = p[1].y - L1;
+        m = getPerspectiveTransform(p, p_new);
+    }
+    return m;
+}
+
+void photo_frame::drawSelectedPoints() {
+    int size_srect = 20;
+    for (int i = 0; i < nPoint; i++) {
+        Rect rect(p[i].x - size_srect / 2, p[i].y - size_srect / 2, size_srect, size_srect);
+        disply_image=image[currentstep].clone();
+        rectangle(disply_image, rect, Scalar(0, 0, 255), 8); //Å©±â
+    }
+    frame_update(disply_image);
+}
+
+
+void photo_frame::mousePressEvent(QMouseEvent *event){
+        on_fit_btn_clicked();
+        int x=event->x();
+        int y=event->y();
+        int P_x=(ui->scrollArea->width()-pixmap_width*zoom_times)/2+1;
+        int P_y=(ui->scrollArea->height()-pixmap_height*zoom_times)/2+1;
+
+        begin_pointX=(x-P_x)/zoom_times;
+        begin_pointY=(y-P_y-ui->scrollArea->y())/zoom_times;
+        if(begin_pointX>Pixmap.width())
+            begin_pointX=Pixmap.width();
+        else if(begin_pointX<0)
+            begin_pointX=0;
+        if(begin_pointY>Pixmap.height())
+            begin_pointY=Pixmap.height();
+        else if(begin_pointY<0)
+            begin_pointY=0;
+
+        if(pers_triger==1){
+            p[nPoint].x = begin_pointX, p[nPoint].y = begin_pointY;
+            nPoint = (nPoint + 1) > 4 ? 4 : (nPoint + 1);
+            drawSelectedPoints();
+            if (nPoint == 4) {
+                Mat m = getPerspectiveMatrix();
+                warpPerspective(image[currentstep], image[currentstep+1], m, Size(image[currentstep].cols, image[currentstep].rows));
+                currentstep++;
+                frame_load(image[currentstep]);
+            }
+        }
+
 
 }
 
 void photo_frame::mouseReleaseEvent(QMouseEvent *event){
-
+    if(pers_triger!=1){
     int x=event->x();
     int y=event->y();
     int P_x=(ui->scrollArea->width()-pixmap_width*zoom_times)/2+1;
@@ -189,7 +236,6 @@ void photo_frame::mouseReleaseEvent(QMouseEvent *event){
         end_pointY=Pixmap.height();
     else if(end_pointY<0)
         end_pointY=0;
-
     QMessageBox message(QMessageBox::NoIcon, "Cut", "Do you want to cut down this area?", QMessageBox::Yes | QMessageBox::No, NULL);
     if(message.exec() == QMessageBox::Yes)
     {
@@ -199,6 +245,14 @@ void photo_frame::mouseReleaseEvent(QMouseEvent *event){
     }
     else
         frame_update(image[currentstep]);
+    }
+    if(pers_triger==1 && nPoint == 4 ){
+        pers_triger=0;
+        nPoint = 0;
+        for(int i =0; i<4;i++){
+            p[i] = Point2f(0.0,0.0);
+        }
+    }
 }
 
 

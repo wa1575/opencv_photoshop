@@ -11,6 +11,8 @@ CascadeClassifier eyes_cascade;
 String glassesImage = "sunglasses.png";//선글라스 이미지
 Mat glasses;
 
+int pers_triger=0;
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -580,3 +582,36 @@ void MainWindow::draw_histo_hue(Mat hist, Mat &hist_img, Size size = Size(256,20
     flip(hist_img, hist_img, 0);//뒤집기
 
 }
+//아핀변환
+void MainWindow::on_affin_btn_clicked()
+{
+    int tx = 100, ty = 0;
+    Point2f center(image[currentstep].cols/2, image[currentstep].rows /2);
+    //회전변환 매트릭스 계산
+    Mat m1 = getRotationMatrix2D(center, 30, 1); //왼쪽 30도 회전이동
+    Matx13d mat_add(0,0,1);
+    m1.push_back((Mat)mat_add);
+    //이동 매트릭스 계산(tx, ty 만큼 이동)
+    Matx33d m2(1,0, tx, 0, 1, ty, 0, 0, 0);
+    //resize 매트릭스 계산(0.5 줄임)
+    Matx33d m3(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0);
+    //shear 매트릭스 계산(1.5 찌그러짐)
+    Matx33d m4(1, 1.5, 0, 0, 1, 0, 0, 0, 0);
+    //회전 후 이동 후 resize  매트릭스 계산
+    Mat m = (Mat)m4*m3*m2*m1;
+    m.pop_back();
+
+    warpAffine(image[currentstep], image[currentstep+1], m, Size(image[currentstep].cols, image[currentstep].rows));
+
+    currentstep++;
+    //update하기
+    photo_window_update(image[currentstep],0);
+    un_redo();
+}
+
+
+void MainWindow::on_perspec_btn_clicked()
+{
+     pers_triger=1;
+}
+

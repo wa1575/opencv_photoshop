@@ -37,6 +37,7 @@ private slots:
     void FLEX(Mat);
     void overlayImage(const Mat &, const Mat &, Mat &, Point2i );
 
+
     void on_actionOpen_File_triggered();
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
@@ -58,6 +59,8 @@ private slots:
     void on_equal_btn_clicked();
     void on_stret_btn_clicked();
     void on_draw_btn_clicked();
+    void on_affin_btn_clicked();
+    void on_perspec_btn_clicked();
 };
 
 #endif // MAINWINDOW_H

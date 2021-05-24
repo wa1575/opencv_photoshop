@@ -5,6 +5,7 @@
 
 extern Mat image[];
 extern int currentstep;
+extern int pers_triger;
 namespace Ui {
 class photo_frame;
 }
@@ -22,6 +23,10 @@ public:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+
+    Mat getPerspectiveMatrix();
+    void drawSelectedPoints();
+    void onMouse(int , int , int , int , void*);
 
 public slots:
     QImage Mat2QImage(Mat src);
