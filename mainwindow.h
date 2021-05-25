@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "stdafx.h"
+#include "affdialog.h"
 
 namespace Ui {
 class MainWindow;

@@ -15,11 +15,14 @@
 #include <QMessageBox>
 #include <QMainWindow>
 #include <QTimer>
+#include <QVector>
+#include <QDebug>
 
 using namespace cv;
 using namespace std;
 
 #include "photo_frame.h"
 #include "mainwindow.h"
+#include "affdialog.h"
 
 #endif // STDAFX_H

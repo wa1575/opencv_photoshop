@@ -490,6 +490,16 @@ void MainWindow::on_normal_btn_clicked()
 
 void MainWindow::on_equal_btn_clicked()
 {
+    if(image[currentstep].channels()==1){
+        equalizeHist(image[currentstep],image[currentstep+1]); //평활화
+        currentstep++;
+    }
+    else{
+        //회색 채널이 아니면 에러가 나게
+        QMessageBox::about(NULL,"Attention","Convert to gray image first.");
+    }
+    photo_window_update(image[currentstep],0);
+    un_redo();
 
 }
 
@@ -582,21 +592,25 @@ void MainWindow::draw_histo_hue(Mat hist, Mat &hist_img, Size size = Size(256,20
     flip(hist_img, hist_img, 0);//뒤집기
 
 }
-//아핀변환
+//아핀 회전 변환
 void MainWindow::on_affin_btn_clicked()
 {
-    int tx = 100, ty = 0;
     Point2f center(image[currentstep].cols/2, image[currentstep].rows /2);
+    //다이얼로그 넣기
+    affDialog *myaff = new affDialog(this);
+    myaff->exec();
     //회전변환 매트릭스 계산
-    Mat m1 = getRotationMatrix2D(center, 30, 1); //왼쪽 30도 회전이동
+    Mat m1 = getRotationMatrix2D(center, myaff->degree, 1); //왼쪽 30도 회전이동
     Matx13d mat_add(0,0,1);
     m1.push_back((Mat)mat_add);
-    //이동 매트릭스 계산(tx, ty 만큼 이동)
-    Matx33d m2(1,0, tx, 0, 1, ty, 0, 0, 0);
+    //이동 매트릭스 계산(tx100, ty10 만큼 이동)
+    Matx33d m2(1,0, myaff->tx, 0, 1, myaff->ty, 0, 0, 0);
     //resize 매트릭스 계산(0.5 줄임)
-    Matx33d m3(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0);
+    Matx33d m3(myaff->size, 0, 0, 0, myaff->size, 0, 0, 0, 0);
     //shear 매트릭스 계산(1.5 찌그러짐)
-    Matx33d m4(1, 1.5, 0, 0, 1, 0, 0, 0, 0);
+    Matx33d m4(1, myaff->shear, 0, 0, 1, 0, 0, 0, 0);
+
+    delete myaff;
     //회전 후 이동 후 resize  매트릭스 계산
     Mat m = (Mat)m4*m3*m2*m1;
     m.pop_back();
@@ -609,7 +623,7 @@ void MainWindow::on_affin_btn_clicked()
     un_redo();
 }
 
-
+//투영 변환
 void MainWindow::on_perspec_btn_clicked()
 {
      pers_triger=1;

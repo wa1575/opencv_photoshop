@@ -25,15 +25,18 @@ CONFIG(release,debug|release){
 }
 
 SOURCES += \
+        affdialog.cpp \
         main.cpp \
         mainwindow.cpp \
         photo_frame.cpp
 
 HEADERS += \
+        affdialog.h \
         mainwindow.h \
         photo_frame.h \
         stdafx.h
 
 FORMS += \
+        affdialog.ui \
         mainwindow.ui \
         photo_frame.ui
