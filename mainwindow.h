@@ -38,6 +38,8 @@ private slots:
     void FLEX(Mat);
     void overlayImage(const Mat &, const Mat &, Mat &, Point2i );
 
+    int search_valueIdx(Mat, int);
+
 
     void on_actionOpen_File_triggered();
     void on_actionUndo_triggered();

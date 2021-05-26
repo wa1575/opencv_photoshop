@@ -481,9 +481,16 @@ void MainWindow::on_close_btn_clicked()
 
 }
 
-
+//normalize로 밝게 (128-256)
 void MainWindow::on_normal_btn_clicked()
 {
+    normalize(image[currentstep], image[currentstep+1], 128, 255, NORM_MINMAX);
+
+    currentstep++;
+
+    //update하기
+    photo_window_update(image[currentstep],0);
+    un_redo();
 
 }
 
@@ -503,10 +510,32 @@ void MainWindow::on_equal_btn_clicked()
 
 }
 
+int MainWindow::search_valueIdx(Mat hist, int bias=0){
+    for(int i =0; i< hist.rows; i++){
+        int idx=abs(bias-i);
+        if(hist.at<float>(idx)>0) return idx; //검색위치반환
+    }
+    return -1;
+}
 
 void MainWindow::on_stret_btn_clicked()
 {
+    Mat hist, hist_dst;
+    int histsize = 64, ranges =256; //계급 개수 및 화소범위
+    calc_Histo(image[currentstep], hist, histsize, ranges);
+    float bin_width = (float)ranges/histsize; //계급너비
+    int low_value = (int)(search_valueIdx(hist,0)*bin_width);
+    int high_value = (int)(search_valueIdx(hist,hist.rows-1)*bin_width);
 
+    int d_value = high_value - low_value;
+   // Mat dst = (image[currentstep]-low_value) * (255.0/d_value);
+    image[currentstep+1] = (image[currentstep]-low_value) * (255.0/d_value);
+
+    currentstep++;
+
+    //update하기
+    photo_window_update(image[currentstep],0);
+    un_redo();
 }
 
 
@@ -528,7 +557,7 @@ void MainWindow::on_draw_btn_clicked()
         cvtColor(image[currentstep], HSV_img, COLOR_BGR2HSV);
         split(HSV_img, HSV_arr);
         calc_Histo(HSV_arr[0], hue_hist, 18, 180);
-        draw_histo(hue_hist, hue_hist_img, Size(360,200));
+        draw_histo_hue(hue_hist, hue_hist_img, Size(360,200));
 
         imshow("hue_his_img", hue_hist_img);
     }
@@ -573,6 +602,7 @@ Mat MainWindow:: make_palatte(int rows){
     cvtColor(hsv, hsv, COLOR_HSV2BGR);
     return hsv;
 }
+//색상으로 히스토그램 그리기
 void MainWindow::draw_histo_hue(Mat hist, Mat &hist_img, Size size = Size(256,200)){
     Mat hsv_palatte = make_palatte(hist.rows);
 
@@ -590,8 +620,8 @@ void MainWindow::draw_histo_hue(Mat hist, Mat &hist_img, Size size = Size(256,20
         if(pt2.y >0) rectangle(hist_img, pt1, pt2, color, -1);
     }
     flip(hist_img, hist_img, 0);//뒤집기
-
 }
+
 //아핀 회전 변환
 void MainWindow::on_affin_btn_clicked()
 {
