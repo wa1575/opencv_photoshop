@@ -11,16 +11,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += opencv
 
 INCLUDEPATH += C:\opencv\build\include
-        C:\opencv\build\include\opencv2
+       C:\opencv\build\include\opencv2
 
 
 CONFIG(debug,debug|release){
-
     LIBS += -LC:\opencv\build\x64\vc15\lib -lopencv_world451d
-
 }
 CONFIG(release,debug|release){
-
     LIBS += -LC:\opencv\build\x64\vc15\lib -lopencv_world451
 }
 

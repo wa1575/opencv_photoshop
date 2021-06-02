@@ -26,14 +26,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->brightness_slider->setMinimum(-20);
     ui->brightness_slider->setMaximum(20);
-
     ui->contrast_slider->setMinimum(-20);
     ui->contrast_slider->setMaximum(20);
-
     ui->brightness_slider->setValue(0);
     ui->contrast_slider->setValue(0);
 
-    myTimer = new QTimer(this);//new QTimer(this)
+    myTimer = new QTimer(this);//QT 동기화를 고려
     myTimer->start(500);                   //1초 간격 타이머
     connect(myTimer,SIGNAL(timeout()),this,SLOT(un_redo()));
 }
@@ -644,5 +642,61 @@ void MainWindow::on_affin_btn_clicked()
 void MainWindow::on_perspec_btn_clicked()
 {
      pers_triger=1;
+}
+void MainWindow::on_actionSharpen_triggered()
+{
+    on_sharpen_btn_clicked();
+}
+void MainWindow::on_actionBlur_triggered()
+{
+    on_blur_btn_clicked();
+}
+void MainWindow::on_actionGray_level_triggered()
+{
+    on_gray_btn_clicked();
+}
+void MainWindow::on_actionEdge_detection_triggered()
+{
+    on_edge_btn_clicked();
+}
+void MainWindow::on_actionAffine_Rotation_triggered()
+{
+    on_affin_btn_clicked();
+}
+void MainWindow::on_actionPerspective_Transform_triggered()
+{
+    on_perspec_btn_clicked();
+}
+void MainWindow::on_actionErosion_triggered()
+{
+    on_eros_btn_clicked();
+}
+void MainWindow::on_actionDilation_triggered()
+{
+     on_dilat_btn_clicked();
+}
+void MainWindow::on_actionOpen_triggered()
+{
+    on_open_btn_clicked();
+}
+void MainWindow::on_actionClose_triggered()
+{
+     on_close_btn_clicked();
+}
+void MainWindow::on_actionNormalize_triggered()
+{
+    on_normal_btn_clicked();
+}
+void MainWindow::on_actionEqualize_triggered()
+{
+    on_equal_btn_clicked();
+}
+void MainWindow::on_actionStretching_triggered()
+{
+    on_stret_btn_clicked();
+}
+void MainWindow::on_actionDraw_Histogram_triggered()
+{
+    on_draw_btn_clicked();
 }
 

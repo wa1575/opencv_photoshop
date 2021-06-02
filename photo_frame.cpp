@@ -1,4 +1,4 @@
-#include "photo_frame.h" //qt가 웃긴게 이게 없으면 슬롯이 추가 안됨
+#include "photo_frame.h"
 #include "ui_photo_frame.h"
 
 //줌 관련 변수

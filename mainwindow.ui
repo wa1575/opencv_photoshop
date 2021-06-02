@@ -357,7 +357,46 @@
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
    </widget>
+   <widget class="QMenu" name="menuConv">
+    <property name="title">
+     <string>Conv</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionSharpen"/>
+    <addaction name="actionBlur"/>
+    <addaction name="actionGray_level"/>
+    <addaction name="actionEdge_detection"/>
+   </widget>
+   <widget class="QMenu" name="menuMopo">
+    <property name="title">
+     <string>Mopo</string>
+    </property>
+    <addaction name="actionErosion"/>
+    <addaction name="actionDilation"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuHisto">
+    <property name="title">
+     <string>Histo</string>
+    </property>
+    <addaction name="actionNormalize"/>
+    <addaction name="actionEqualize"/>
+    <addaction name="actionStretching"/>
+    <addaction name="actionDraw_Histogram"/>
+   </widget>
+   <widget class="QMenu" name="menuWrap">
+    <property name="title">
+     <string>Wrap</string>
+    </property>
+    <addaction name="actionAffine_Rotation"/>
+    <addaction name="actionPerspective_Transform"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuConv"/>
+   <addaction name="menuMopo"/>
+   <addaction name="menuHisto"/>
+   <addaction name="menuWrap"/>
    <addaction name="menuEdit"/>
   </widget>
   <action name="actionOpen_File">
@@ -382,12 +421,94 @@
   </action>
   <action name="actionUndo">
    <property name="text">
-    <string>Undo</string>
+    <string>Undo (ctrl+Z)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+   <property name="shortcutVisibleInContextMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionRedo">
    <property name="text">
-    <string>Redo</string>
+    <string>Redo (ctrl+X)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionSharpen">
+   <property name="text">
+    <string>Sharpen</string>
+   </property>
+   <property name="font">
+    <font/>
+   </property>
+  </action>
+  <action name="actionBlur">
+   <property name="text">
+    <string>Blur</string>
+   </property>
+  </action>
+  <action name="actionGray_level">
+   <property name="text">
+    <string>Gray level</string>
+   </property>
+  </action>
+  <action name="actionEdge_detection">
+   <property name="text">
+    <string>Edge detection</string>
+   </property>
+  </action>
+  <action name="actionAffine_Rotation">
+   <property name="text">
+    <string>Affine Rotation</string>
+   </property>
+  </action>
+  <action name="actionPerspective_Transform">
+   <property name="text">
+    <string>Perspective Transform</string>
+   </property>
+  </action>
+  <action name="actionErosion">
+   <property name="text">
+    <string>Erosion</string>
+   </property>
+  </action>
+  <action name="actionDilation">
+   <property name="text">
+    <string>Dilation</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionNormalize">
+   <property name="text">
+    <string>Normalize</string>
+   </property>
+  </action>
+  <action name="actionEqualize">
+   <property name="text">
+    <string>Equalize</string>
+   </property>
+  </action>
+  <action name="actionStretching">
+   <property name="text">
+    <string>Stretching</string>
+   </property>
+  </action>
+  <action name="actionDraw_Histogram">
+   <property name="text">
+    <string>Draw Histogram</string>
    </property>
   </action>
  </widget>

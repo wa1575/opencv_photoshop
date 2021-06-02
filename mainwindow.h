@@ -61,6 +61,21 @@ private slots:
     void on_equal_btn_clicked();//평활화
     void on_stret_btn_clicked();//스트레칭
     void on_draw_btn_clicked();//히스토그램 맞춰서 그려주기
+    void on_actionSharpen_triggered();
+    void on_actionBlur_triggered();
+    void on_actionGray_level_triggered();
+    void on_actionAffine_Rotation_triggered();
+    void on_actionEdge_detection_triggered();
+    void on_actionPerspective_Transform_triggered();
+
+    void on_actionErosion_triggered();
+    void on_actionDilation_triggered();
+    void on_actionOpen_triggered();
+    void on_actionClose_triggered();
+    void on_actionNormalize_triggered();
+    void on_actionEqualize_triggered();
+    void on_actionStretching_triggered();
+    void on_actionDraw_Histogram_triggered();
 };
 
 #endif // MAINWINDOW_H
