@@ -32,7 +32,7 @@
       <item>
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>13th 영역처리</string>
+         <string>Wraping</string>
         </property>
        </widget>
       </item>
@@ -66,21 +66,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <item>
-         <property name="text">
-          <string>Gray Level</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Equalize Histogram</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Edge detection</string>
-         </property>
-        </item>
         <item>
          <property name="text">
           <string>Face detection</string>

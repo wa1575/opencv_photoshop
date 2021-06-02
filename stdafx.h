@@ -25,4 +25,7 @@ using namespace std;
 #include "mainwindow.h"
 #include "affdialog.h"
 
+
+
+
 #endif // STDAFX_H
