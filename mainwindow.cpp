@@ -170,7 +170,7 @@ void MainWindow::on_actionSave_File_triggered()
     }
 }
 
-//blur버튼 클릭 - 뿌옇게
+//blur버튼 클릭 - 부드럽게
 void MainWindow::on_blur_btn_clicked()
 {   //가우시안blur 발동
     GaussianBlur(image[step],image[step+1],Size(9,9),0,0);
@@ -470,7 +470,7 @@ void MainWindow::on_close_btn_clicked()
     un_redo();
 }
 
-//normalize로 밝게 (128-256)
+//normalize로 밝게 (128-255)
 void MainWindow::on_normal_btn_clicked()
 {
     normalize(image[step], image[step+1], 128, 255, NORM_MINMAX);

@@ -96,7 +96,6 @@ void photo_frame::on_zoomout_btn_clicked()
 
     QPixmap ZPixmap = Pixmap.scaledToHeight(pix_height_t);
     ui->label->setPixmap(ZPixmap);
-
 }
 //이미지를 화면에 딱 맞추기
 void photo_frame::on_fit_btn_clicked()
