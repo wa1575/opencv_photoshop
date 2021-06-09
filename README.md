@@ -21,3 +21,16 @@ the mini photoshop using qt by cpp
  아핀 회전, 원근 변환
  
  
+ ![2](https://user-images.githubusercontent.com/67878157/121289193-8788f100-c91f-11eb-8842-0289bc131d72.jpg)
+ 
+ 
+![3](https://user-images.githubusercontent.com/67878157/121289197-88ba1e00-c91f-11eb-95ff-cb5ed17c1224.jpg)
+
+
+![4](https://user-images.githubusercontent.com/67878157/121289200-88ba1e00-c91f-11eb-8555-d900e607d3cc.jpg)
+
+
+![5](https://user-images.githubusercontent.com/67878157/121289201-8952b480-c91f-11eb-9d3b-479bd03d771c.jpg)
+
+
+![6](https://user-images.githubusercontent.com/67878157/121289204-89eb4b00-c91f-11eb-9b0d-1c7d55109e20.jpg)
